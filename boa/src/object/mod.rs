@@ -1,19 +1,6 @@
 //! This module implements the Rust representation of a JavaScript object.
 
-use crate::{
-    builtins::{
-        array::array_iterator::ArrayIterator,
-        function::{BuiltInFunction, Function, FunctionFlags, NativeFunction},
-        map::ordered_map::OrderedMap,
-        string::string_iterator::StringIterator,
-        BigInt, Date, RegExp,
-    },
-    context::StandardConstructor,
-    gc::{Finalize, Trace},
-    property::{Attribute, Property, PropertyKey},
-    value::{RcBigInt, RcString, RcSymbol, Value},
-    BoaProfiler, Context,
-};
+use crate::{BoaProfiler, Context, builtins::{BigInt, Date, RegExp, array::array_iterator::ArrayIterator, function::{BuiltInFunction, Function, FunctionFlags, NativeFunction}, map::map_iterator::MapIterator, map::ordered_map::OrderedMap, string::string_iterator::StringIterator}, context::StandardConstructor, gc::{Finalize, Trace}, property::{Attribute, Property, PropertyKey}, value::{RcBigInt, RcString, RcSymbol, Value}};
 use rustc_hash::FxHashMap;
 use std::{
     any::Any,
@@ -76,6 +63,7 @@ pub enum ObjectData {
     Array,
     ArrayIterator(ArrayIterator),
     Map(OrderedMap<Value, Value>),
+    MapIterator(MapIterator),
     RegExp(Box<RegExp>),
     BigInt(RcBigInt),
     Boolean(bool),
@@ -102,6 +90,7 @@ impl Display for ObjectData {
                 Self::Function(_) => "Function",
                 Self::RegExp(_) => "RegExp",
                 Self::Map(_) => "Map",
+                Self::MapIterator(_) => "MapIterator",
                 Self::String(_) => "String",
                 Self::StringIterator(_) => "StringIterator",
                 Self::Symbol(_) => "Symbol",
@@ -293,6 +282,14 @@ impl Object {
     pub fn as_array_iterator_mut(&mut self) -> Option<&mut ArrayIterator> {
         match &mut self.data {
             ObjectData::ArrayIterator(iter) => Some(iter),
+            _ => None,
+        }
+    }
+
+    #[inline]
+    pub fn as_map_iterator_mut(&mut self) -> Option<&mut MapIterator> {
+        match &mut self.data {
+            ObjectData::MapIterator(iter) => Some(iter),
             _ => None,
         }
     }

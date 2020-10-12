@@ -6,11 +6,14 @@ use crate::{
     BoaProfiler, Context, Result, Value,
 };
 
+use super::map::map_iterator::MapIterator;
+
 #[derive(Debug, Default)]
 pub struct IteratorPrototypes {
     iterator_prototype: GcObject,
     array_iterator: GcObject,
     string_iterator: GcObject,
+    map_iterator: GcObject,
 }
 
 impl IteratorPrototypes {
@@ -23,9 +26,12 @@ impl IteratorPrototypes {
             array_iterator: ArrayIterator::create_prototype(ctx, iterator_prototype.clone())
                 .as_gc_object()
                 .expect("Array Iterator Prototype is not an object"),
-            string_iterator: StringIterator::create_prototype(ctx, iterator_prototype)
+            string_iterator: StringIterator::create_prototype(ctx, iterator_prototype.clone())
                 .as_gc_object()
                 .expect("String Iterator Prototype is not an object"),
+            map_iterator: MapIterator::create_prototype(ctx, iterator_prototype)
+                .as_gc_object()
+                .expect("Map Iterator Prototype is not an object"),
         }
     }
 
@@ -39,6 +45,10 @@ impl IteratorPrototypes {
 
     pub fn string_iterator(&self) -> GcObject {
         self.string_iterator.clone()
+    }
+
+    pub fn map_iterator(&self) -> GcObject {
+        self.map_iterator.clone()
     }
 }
 

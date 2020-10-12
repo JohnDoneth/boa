@@ -229,3 +229,26 @@ fn not_a_function() {
         "\"TypeError: function object is not callable\""
     );
 }
+
+
+#[test]
+fn map_prototype_values() {
+    let mut engine = Context::new();
+    let init = r"
+        let map1 = new Map();
+        map1.set('0', 'foo');
+        map1.set(1, 'bar');
+        let iter = map1.values();
+    ";
+    forward(&mut engine, init);
+
+    assert_eq!(
+        forward(&mut engine, "iter.next().value"),
+        "\"foo\""
+    );
+
+    assert_eq!(
+        forward(&mut engine, "iter.next().value"),
+        "\"bar\""
+    );
+}

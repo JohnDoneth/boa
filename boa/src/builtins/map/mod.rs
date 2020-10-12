@@ -1,16 +1,16 @@
 #![allow(clippy::mutable_key_type)]
 
-use crate::{
-    builtins::BuiltIn,
-    object::{ConstructorBuilder, ObjectData, PROTOTYPE},
-    property::{Attribute, Property},
-    BoaProfiler, Context, Result, Value,
-};
+use crate::{BoaProfiler, Context, Result, Value, builtins::BuiltIn, object::{ConstructorBuilder, ObjectData, ObjectInitializer, PROTOTYPE}, property::{Attribute, Property}};
 use ordered_map::OrderedMap;
+
+use self::map_iterator::{MapIterationKind, MapIterator};
+
+pub mod map_iterator;
 
 pub mod ordered_map;
 #[cfg(test)]
 mod tests;
+
 
 #[derive(Debug, Clone)]
 pub(crate) struct Map(OrderedMap<Value, Value>);
@@ -34,6 +34,8 @@ impl BuiltIn for Map {
             .method(Self::clear, "clear", 0)
             .method(Self::has, "has", 1)
             .method(Self::for_each, "forEach", 1)
+            .method(Self::values, "values", 0)
+            .method(Self::size, "size", 0)
             .callable(false)
             .build();
 
@@ -283,6 +285,32 @@ impl Map {
         }
 
         Ok(Value::Undefined)
+    }
+
+    /// TODO: docs
+    pub(crate) fn values(
+        this: &Value,
+        _args: &[Value],
+        ctx: &mut Context,
+    ) -> Result<Value> {
+        MapIterator::create_map_iterator(ctx, this.clone(), MapIterationKind::Value)
+    }
+
+    /// TODO: docs
+    pub(crate) fn size(
+        this: &Value,
+        _args: &[Value],
+        ctx: &mut Context,
+    ) -> Result<Value> {
+        
+        if let Value::Object(ref object) = this {
+            let mut object = object.borrow_mut();
+            if let Some(map) = object.as_map_mut() {
+                return Ok(Value::integer(map.len() as i32));
+            }
+        }
+
+        unimplemented!()
     }
 
     /// Helper function to get a key-value pair from an array.
