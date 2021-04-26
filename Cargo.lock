@@ -564,12 +564,16 @@ checksum = "60302e4db3a61da70c0cb7991976248362f30319e88850c487b9b95bbf059e00"
 
 [[package]]
 name = "measureme"
-version = "0.8.0"
+version = "9.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7e5a18d45a9687ab429498b80d36ca4f267cdc9d7732cdd4b538ff79d952f81f"
+checksum = "49cf14eb7d2eea897d9949b68f19e165638755e3a1a3c0941b6b6c3e00141f2c"
 dependencies = [
+ "log",
+ "memmap2",
  "parking_lot",
+ "perf-event-open-sys",
  "rustc-hash",
+ "smallvec",
 ]
 
 [[package]]
@@ -577,6 +581,15 @@ name = "memchr"
 version = "2.3.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3728d817d99e5ac407411fa471ff9800a778d88a24685968b36824eaf4bee400"
+
+[[package]]
+name = "memmap2"
+version = "0.2.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "397d1a6d6d0563c0f5462bbdae662cf6c784edf5e828e40c7257f85d82bf56dd"
+dependencies = [
+ "libc",
+]
 
 [[package]]
 name = "memoffset"
@@ -676,6 +689,15 @@ dependencies = [
  "redox_syscall",
  "smallvec",
  "winapi",
+]
+
+[[package]]
+name = "perf-event-open-sys"
+version = "1.0.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ce9bedf5da2c234fdf2391ede2b90fabf585355f33100689bc364a3ea558561a"
+dependencies = [
+ "libc",
 ]
 
 [[package]]
