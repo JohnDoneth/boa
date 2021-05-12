@@ -103,7 +103,7 @@ jobs:
         with:
           args: --ignore-tests
       - name: Upload to codecov.io
-        uses: codecov/codecov-action@v1
+        uses: codecov/codecov-action@v1.5.0
 
   test_on_windows:
     name: Test Suite on Windows
